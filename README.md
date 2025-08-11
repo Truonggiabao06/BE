@@ -36,7 +36,52 @@ Việc tham gia đấu giá và đặt giá sẽ được thực hiện trực t
 
 * Admin (Quản trị viên): Người có quyền cao nhất, quản trị toàn bộ hệ thống.
 
-# Code PlantUML
+
+<details>
+<summary> Code PlantUML</summary>
+
+```plantuml
+@startuml
+!theme plain
+skinparam shadowing false
+skinparam defaultTextAlignment center
+skinparam actor {
+    borderColor black
+    backgroundColor white
+}
+skinparam rectangle {
+    borderColor black
+    backgroundColor white
+}
+
+
+rectangle "Hệ thống\nĐấu giá" as System
+
+actor Guest as "Khách vãng lai"
+actor Customer as "Khách hàng"
+actor Staff as "Nhân viên"
+actor Manager as "Quản lý"
+actor Admin as "Quản trị viên"
+
+
+
+
+
+Guest --> System : truy cập
+Customer --> System : sử dụng
+Staff --> System : vận hành
+Manager --> System : quản lý
+Admin --> System : quản trị
+
+
+
+Customer --|> Guest
+Manager --> Staff : quản lý
+Admin --> Manager : quản lý
+
+@enduml
+```
+</details>
 
 <img width="579" height="466" alt="image" src="https://github.com/user-attachments/assets/bf19396d-a911-4d20-a629-2cfa38de5c65" />
 
