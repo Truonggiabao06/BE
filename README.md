@@ -54,3 +54,39 @@ Việc tham gia đấu giá và đặt giá sẽ được thực hiện trực t
 
 * Đăng nhập: Đăng nhập vào hệ thống bằng tài khoản đã đăng ký.
 
+# Buyer & Seller:
+* Quản lý tài khoản: Cập nhật thông tin cá nhân, thay đổi mật khẩu, quản lý địa chỉ và thông tin thanh toán.
+
+* Tạo yêu cầu ký gửi (Seller): Điền form để gửi yêu cầu đấu giá cho sản phẩm của mình, bao gồm mô tả, hình ảnh và giá mong muốn.
+
+* Theo dõi sản phẩm (Seller): Xem trạng thái các sản phẩm đã ký gửi (chờ duyệt, đã định giá, đang đấu giá, đã bán).
+
+* Đăng ký tham gia phiên (Buyer): Đăng ký để có quyền tham gia và đặt giá trong một phiên đấu giá cụ thể.
+
+* Đặt giá (Buyer): Thực hiện đặt giá cho sản phẩm mong muốn trong thời gian phiên đấu giá diễn ra.
+
+* Lịch sử giao dịch: Xem lại lịch sử các sản phẩm đã bán (đối với Seller) hoặc lịch sử các phiên đã tham gia và các sản phẩm đã thắng (đối với Buyer).
+
+* Thanh toán (Buyer): Thực hiện thanh toán trực tuyến cho sản phẩm đã thắng cuộc.
+
+# Staff:
+* Quản lý sản phẩm: Tiếp nhận yêu cầu ký gửi, thẩm định chất lượng, cập nhật thông tin chi tiết và hình ảnh cho sản phẩm.
+
+* Quản lý phiên đấu giá:
+
+* Tạo phiên: Lên lịch phiên đấu giá mới, ấn định thời gian, thêm sản phẩm vào phiên.
+
+* Vận hành phiên: Bắt đầu, tạm dừng, hoặc kết thúc một phiên đấu giá.
+
+* Quản lý giao dịch: Xác nhận thanh toán thành công từ người mua và cập nhật trạng thái để tiến hành bàn giao sản phẩm.
+
+* Hỗ trợ người dùng: Xem và phản hồi các yêu cầu hỗ trợ từ người dùng.
+
+# Manager:
+* Phê duyệt giá: Xem xét và phê duyệt mức giá khởi điểm cuối cùng do nhân viên đề xuất cho các sản phẩm quan trọng.
+
+* Quản lý nhân viên: Xem danh sách nhân viên và hiệu suất làm việc.
+
+* Xem báo cáo: Truy cập các báo cáo thống kê về doanh thu, số lượng sản phẩm, hiệu quả của các phiên đấu giá.
+
+* Quản lý phí và hoa hồng: Cấu hình các mức phí giao dịch áp dụng cho người mua và người bán.
