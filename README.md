@@ -21,7 +21,7 @@ Việc tham gia đấu giá và đặt giá sẽ được thực hiện trực t
 
 * Hệ thống có tích hợp cổng thanh toán cho việc giao dịch sản phẩm, không phải là một ví điện tử với đầy đủ chức năng nạp, rút, chuyển tiền.
 
-#II. Yêu cầu chức năng
+# II. Yêu cầu chức năng
 
 #  Các tác nhân 
 * Guest (Khách vãng lai): Người dùng chưa đăng nhập.
