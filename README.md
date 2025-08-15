@@ -425,3 +425,222 @@ Admin --> UC3
 </details>
 <img width="410" height="256" alt="image" src="https://github.com/user-attachments/assets/b6a824dd-85b9-4c2f-a30a-e91d6d7368f9" />
 
+# Quy trình hoạt động
+## Quy trình ký gửi sản phẩm
+
+Quy trình này mô tả các bước từ khi người bán có nhu cầu đấu giá sản phẩm cho đến khi sản phẩm sẵn sàng được đưa lên sàn.
+
+* Người bán: Đăng nhập vào hệ thống và chọn chức năng "Tạo yêu cầu ký gửi".
+
+* Người bán: Điền đầy đủ thông tin mô tả sản phẩm, tải lên hình ảnh chi tiết và gửi yêu cầu.
+
+* Hệ thống: Tiếp nhận yêu cầu, lưu trữ với trạng thái "Chờ duyệt" và tạo một thông báo mới cho các Nhân viên liên quan.
+
+* Nhân viên: Truy cập danh sách các yêu cầu đang chờ, chọn một yêu cầu để bắt đầu quá trình thẩm định.
+
+* Nhân viên: Dựa trên thông tin và hình ảnh, thực hiện thẩm định, đề xuất mức giá khởi điểm và cập nhật vào hệ thống.
+
+* Nhân viên: Với các sản phẩm có giá trị cao, Nhân viên sẽ trình yêu cầu lên cho Giám đốc.
+
+* Giám đốc: Xem xét yêu cầu, kiểm tra thông tin thẩm định và mức giá khởi điểm.
+
+* Giám đốc: Thực hiện Phê duyệt hoặc Từ chối yêu cầu.
+
+* Hệ thống: Cập nhật trạng thái cuối cùng cho sản phẩm .
+
+* Hệ thống: Tự động gửi một thông báo (notification) đến Người bán về kết quả của yêu cầu ký gửi.
+
+
+<details>
+<summary> Code PlantUML</summary>
+
+```plantum
+@startuml
+!theme plain
+title Quy trình Ký gửi Sản phẩm
+
+|Người bán|
+start
+:Đăng nhập & chọn "Tạo yêu cầu ký gửi";
+:Điền thông tin & Gửi yêu cầu;
+
+|Hệ thống|
+:Tiếp nhận yêu cầu;
+:Đặt trạng thái = "Chờ duyệt";
+:Thông báo cho Nhân viên;
+
+|Nhân viên|
+:Tiếp nhận yêu cầu;
+:Thẩm định & đề xuất giá khởi điểm;
+
+if (Sản phẩm giá trị cao?) then (yes)
+  :Trình yêu cầu lên Giám đốc;
+
+  |Giám đốc|
+  :Xem xét hồ sơ & Kiểm tra thông tin;
+  if (Phê duyệt?) then (Duyệt)
+    |Hệ thống|
+    :Cập nhật trạng thái = "Sẵn sàng đấu giá";
+  else (Từ chối)
+    |Hệ thống|
+    :Cập nhật trạng thái = "Bị từ chối";
+  endif
+
+else (no)
+  |Hệ thống|
+  :Cập nhật trạng thái = "Sẵn sàng đấu giá";
+endif
+
+|Hệ thống|
+:Thông báo kết quả cho Nhân viên & Người bán;
+
+|Người bán|
+stop
+@enduml
+```
+</details>
+<img width="1281" height="646" alt="image" src="https://github.com/user-attachments/assets/7084d54a-174a-4b3b-8d97-7303a20876f4" />
+
+## Quy trình tham gia đấu giá
+* Người mua: Đăng nhập và truy cập vào danh sách các phiên đấu giá đang hoặc sắp diễn ra.
+
+* Người mua: Chọn một phiên đấu giá cụ thể và nhấn "Đăng ký tham gia".
+
+* Hệ thống: Ghi nhận việc đăng ký và cho phép Người mua truy cập vào phòng đấu giá khi phiên bắt đầu.
+
+* Hệ thống: Khi phiên đấu giá bắt đầu, hệ thống hiển thị sản phẩm, giá cao nhất hiện tại và đồng hồ đếm ngược.
+
+* Người mua: Nhập mức giá mong muốn (phải cao hơn giá hiện tại + bước giá tối thiểu) và nhấn nút "Đặt giá".
+
+* Hệ thống: Xác thực mức giá.
+
+* Nếu hợp lệ: Ghi nhận mức giá mới, cập nhật lại thông tin "giá cao nhất" và "người giữ giá" trên giao diện của tất cả người dùng trong phiên.
+
+* Nếu không hợp lệ: Hiển thị thông báo lỗi cho Người mua.
+
+* Hệ thống: Khi đồng hồ đếm ngược kết thúc, hệ thống sẽ chốt phiên cho sản phẩm đó.
+
+* Hệ thống: Tự động xác định người giữ giá cuối cùng là người thắng cuộc.
+
+* Hệ thống: Gửi thông báo thắng cuộc đến cho Người mua và tạo một giao dịch mới đang chờ thanh toán.
+
+<details>
+<summary> Code PlantUML</summary>
+
+```plantum
+@startuml
+!theme plain
+title Quy trình Tham gia và Đấu giá
+
+|Người mua|
+start
+:Đăng nhập & Tìm phiên đấu giá;
+:Đăng ký tham gia phiên;
+
+|Hệ thống|
+:Tiếp nhận đăng ký;
+:Cho phép truy cập "phòng đấu giá"\nkhi phiên bắt đầu;
+:Đến thời điểm bắt đầu → Khởi tạo phiên & đếm ngược;
+
+while (Còn thời gian?) is (yes)
+  :Hiển thị sản phẩm,\nGiá cao nhất & Người giữ giá,\nThời gian còn lại;
+
+  |Người mua|
+  :Nhập mức giá >=\nGiá hiện tại + Bước tối thiểu;
+  :Nhấn "Đặt giá";
+
+  |Hệ thống|
+  if (Giá đặt hợp lệ?) then (yes)
+    :Ghi nhận giá mới;
+    :Cập nhật "Giá cao nhất"\n& "Người giữ giá";
+    :Broadcast cập nhật\nreal-time cho tất cả;
+  else (no)
+    :Thông báo lỗi cho Người mua;
+  endif
+endwhile (no)
+
+: Xác định người thắng cuộc\n= Người giữ giá cuối cùng;
+: Tạo "Giao dịch mới"\ntrạng thái "Chờ thanh toán";
+: Gửi thông báo thắng cuộc\ncho Người mua;
+
+|Người mua|
+stop
+@enduml
+```
+</details>
+<img width="412" height="730" alt="image" src="https://github.com/user-attachments/assets/6a244bee-88b8-4f9f-a658-3d6e79be46cd" />
+
+## Quy trình Thanh toán và Hoàn tất Giao dịch
+
+* Người mua: Nhận được thông báo thắng cuộc và truy cập vào mục "Giao dịch của tôi".
+
+* Người mua: Chọn giao dịch đang chờ và nhấn "Tiến hành thanh toán".
+
+* Hệ thống: Chuyển hướng người dùng đến một cổng thanh toán an toàn của bên thứ ba.
+
+* Người mua: Nhập thông tin và hoàn tất việc thanh toán trên cổng thanh toán.
+
+* Hệ thống: Nhận tín hiệu xác nhận thanh toán thành công từ cổng thanh toán.
+
+* Hệ thống: Cập nhật trạng thái giao dịch thành "Đã thanh toán" và gửi thông báo cho Nhân viên.
+
+* Nhân viên: Nhận thông báo, chuẩn bị sản phẩm và liên hệ với Người mua để sắp xếp việc bàn giao.
+
+* Nhân viên: Sau khi bàn giao sản phẩm thành công, Nhân viên cập nhật trạng thái cuối cùng của giao dịch thành "Đã hoàn tất".
+
+* Hệ thống: Ghi nhận giao dịch đã kết thúc thành công. Dựa trên đó, hệ thống sẽ tính toán và lên lịch chuyển tiền cho Người bán sau khi đã trừ đi các khoản phí dịch vụ.
+
+<details>
+<summary> Code PlantUML</summary>
+
+```plantum
+@startuml
+!theme plain
+skinparam defaultFontName Arial
+title Quy trình Thanh toán và Hoàn tất Giao dịch
+
+|Hệ thống|
+start
+: Tạo giao dịch "Chờ thanh toán";
+: Gửi thông báo thắng cuộc cho Người mua;
+
+|Người mua|
+: Mở "Giao dịch của tôi";
+: Chọn giao dịch đang chờ và nhấn "Thanh toán";
+
+|Hệ thống|
+: Chuyển hướng sang cổng thanh toán;
+
+|Cổng thanh toán|
+: Hiển thị form thanh toán;
+: Người mua nhập thông tin & xác nhận;
+: Xử lý giao dịch;
+
+|Hệ thống|
+: Nhận kết quả từ cổng thanh toán;
+if (Thanh toán thành công?) then (Yes)
+  : Cập nhật trạng thái = "Đã thanh toán";
+  : Thông báo cho Nhân viên;
+
+  |Nhân viên|
+  : Chuẩn bị sản phẩm & liên hệ bàn giao;
+  : Bàn giao sản phẩm;
+  : Cập nhật trạng thái cuối = "Đã hoàn tất";
+
+  |Hệ thống|
+  : Ghi nhận giao dịch đã kết thúc;
+  : Tính phí dịch vụ & số tiền chuyển;
+  : Lên lịch chuyển tiền cho Người bán;
+  stop
+else (No)
+  : Ghi nhận lỗi thanh toán;
+  : Thông báo thanh toán thất bại cho Người mua;
+  stop
+endif
+@enduml
+
+```
+</details>
+<img width="1118" height="857" alt="image" src="https://github.com/user-attachments/assets/c8564872-bd98-4a34-b680-4445b45c81c3" />
+
+
