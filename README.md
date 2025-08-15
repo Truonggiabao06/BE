@@ -87,7 +87,7 @@ Admin --> Manager : quản lý
 
 # Các chức năng chính
 
-#  Guest:
+##  Guest:
 
 * Xem sản phẩm/phiên đấu giá: Cho phép xem danh sách các sản phẩm và các phiên đấu giá đang diễn ra hoặc sắp tới.
 
@@ -99,7 +99,7 @@ Admin --> Manager : quản lý
 
 * Đăng nhập: Đăng nhập vào hệ thống bằng tài khoản đã đăng ký.
 
-# Buyer & Seller:
+## Buyer & Seller:
 * Quản lý tài khoản: Cập nhật thông tin cá nhân, thay đổi mật khẩu, quản lý địa chỉ và thông tin thanh toán.
 
 * Tạo yêu cầu ký gửi (Seller): Điền form để gửi yêu cầu đấu giá cho sản phẩm của mình, bao gồm mô tả, hình ảnh và giá mong muốn.
@@ -114,7 +114,7 @@ Admin --> Manager : quản lý
 
 * Thanh toán (Buyer): Thực hiện thanh toán trực tuyến cho sản phẩm đã thắng cuộc.
 
-# Staff:
+## Staff:
 * Quản lý sản phẩm: Tiếp nhận yêu cầu ký gửi, thẩm định chất lượng, cập nhật thông tin chi tiết và hình ảnh cho sản phẩm.
 
 * Quản lý phiên đấu giá:
@@ -127,7 +127,7 @@ Admin --> Manager : quản lý
 
 * Hỗ trợ người dùng: Xem và phản hồi các yêu cầu hỗ trợ từ người dùng.
 
-# Manager:
+## Manager:
 * Phê duyệt giá: Xem xét và phê duyệt mức giá khởi điểm cuối cùng do nhân viên đề xuất cho các sản phẩm quan trọng.
 
 * Quản lý nhân viên: Xem danh sách nhân viên và hiệu suất làm việc.
@@ -136,7 +136,7 @@ Admin --> Manager : quản lý
 
 * Quản lý phí và hoa hồng: Cấu hình các mức phí giao dịch áp dụng cho người mua và người bán.
 
-# Admin:
+## Admin:
 
 * Quản lý tài khoản: Có toàn quyền xem, tạo, sửa, xóa, khóa/mở khóa tài khoản của tất cả người dùng trong hệ thống.
 
@@ -253,4 +253,175 @@ Manager -[hidden]right- PManager
 
  <img width="1518" height="511" alt="Ảnh chụp màn hình 2025-08-12 011929" src="https://github.com/user-attachments/assets/07c216b0-8636-4ac1-bea4-d63c81d613e0" />
 
+
+# Biểu đồ Use Case chi tiết
+## Chữc năng Guest
+<details>
+<summary> Code PlantUML</summary>
+
+```plantuml
+@startuml
+!theme plain
+left to right direction
+
+actor Guest as "Khách mời"
+
+rectangle "Hệ thống" {
+    usecase "Xem sản phẩm / phiên" as UC1
+    usecase "Tìm kiếm sản phẩm" as UC2
+    usecase "Xem thông tin chi tiết" as UC3
+    usecase "Đăng ký" as UC4
+    usecase "Đăng nhập" as UC5
+}
+
+Guest --> UC1
+Guest --> UC2
+Guest --> UC3
+Guest --> UC4
+Guest --> UC5
+@enduml
+```
+</details>
+<img width="338" height="376" alt="image" src="https://github.com/user-attachments/assets/da363b48-ce0a-4d27-9df2-5ed72828e053" />
+
+## Chức năng Buyer
+<details>
+<summary> Code PlantUML</summary>
+
+```plantuml
+@startuml
+!theme plain
+left to right direction
+
+actor Buyer as "Người mua"
+
+rectangle "Hệ thống" {
+    usecase "Quản lý tài khoản" as UC1
+    usecase "Xem lịch sử giao dịch" as UC2
+    usecase "Đăng ký tham gia phiên" as UC3
+    usecase "Đặt giá" as UC4
+    usecase "Thanh toán" as UC5
+}
+
+Buyer --> UC1
+Buyer --> UC2
+Buyer --> UC3
+Buyer --> UC4
+Buyer --> UC5
+@enduml
+```
+</details>
+<img width="349" height="377" alt="image" src="https://github.com/user-attachments/assets/e7158784-fdf5-4eba-9678-f0909956a95f" />
+
+## Chức năng Seller
+<details>
+<summary> Code PlantUML</summary>
+
+```plantuml
+@startuml
+!theme plain
+left to right direction
+
+actor Seller as "Người bán"
+
+rectangle "Hệ thống" {
+    usecase "Quản lý tài khoản" as UC1
+    usecase "Xem lịch sử giao dịch" as UC2
+    usecase "Tạo yêu cầu ký gửi" as UC3
+    usecase "Theo dõi sản phẩm" as UC4
+}
+
+Seller --> UC1
+Seller --> UC2
+Seller --> UC3
+Seller --> UC4
+@enduml
+```
+</details>
+<img width="346" height="318" alt="image" src="https://github.com/user-attachments/assets/78ff4f64-8b03-4258-ae08-d70ebc651dc4" />
+
+## Chức năng Staff
+<details>
+<summary> Code PlantUML</summary>
+
+```plantum
+@startuml
+!theme plain
+left to right direction
+
+actor Staff as "Nhân viên"
+
+rectangle "Hệ thống" {
+    usecase "Quản lý sản phẩm" as UC1
+    usecase "Quản lý phiên đấu giá" as UC2
+    usecase "Tạo phiên" as UC3
+    usecase "Vận hành phiên" as UC4
+    usecase "Quản lý giao dịch" as UC5
+    usecase "Hỗ trợ người dùng" as UC6
+}
+
+Staff --> UC1
+Staff --> UC2
+Staff --> UC3
+Staff --> UC4
+Staff --> UC5
+Staff --> UC6
+@enduml
+
+```
+</details>
+<img width="382" height="522" alt="image" src="https://github.com/user-attachments/assets/2c4b1532-bdaf-492d-a583-f740c31f87f0" />
+
+
+## Chức năng Manager
+<details>
+<summary> Code PlantUML</summary>
+
+```plantum
+@startuml
+!theme plain
+left to right direction
+
+actor Manager as "Giám đốc"
+
+rectangle "Hệ thống" {
+    usecase "Phê duyệt giá" as UC1
+    usecase "Quản lý nhân viên" as UC2
+    usecase "Xem báo cáo" as UC3
+    usecase "Quản lý phí & hoa hồng" as UC4
+}
+
+Manager --> UC1
+Manager --> UC2
+Manager --> UC3
+Manager --> UC4
+@enduml
+```
+</details>
+<img width="359" height="308" alt="image" src="https://github.com/user-attachments/assets/bbe1fba7-3a0d-4065-8689-166143b28d7c" />
+
+## Chức năng Admin
+<details>
+<summary> Code PlantUML</summary>
+
+```plantum
+@startuml
+!theme plain
+left to right direction
+
+actor Admin as "Quản trị viên"
+
+rectangle "Hệ thống" {
+    usecase "Quản lý tài khoản người dùng" as UC1
+    usecase "Giám sát hệ thống" as UC2
+    usecase "Cấu hình hệ thống" as UC3
+}
+
+Admin --> UC1
+Admin --> UC2
+Admin --> UC3
+@enduml
+```
+</details>
+<img width="410" height="256" alt="image" src="https://github.com/user-attachments/assets/b6a824dd-85b9-4c2f-a30a-e91d6d7368f9" />
 
