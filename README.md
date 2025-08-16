@@ -428,7 +428,6 @@ Admin --> UC3
 # Quy trình hoạt động
 ## Quy trình ký gửi sản phẩm
 
-Quy trình này mô tả các bước từ khi người bán có nhu cầu đấu giá sản phẩm cho đến khi sản phẩm sẵn sàng được đưa lên sàn.
 
 * Người bán: Đăng nhập vào hệ thống và chọn chức năng "Tạo yêu cầu ký gửi".
 
