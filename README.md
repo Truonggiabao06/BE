@@ -1014,4 +1014,10 @@ Cancelled --> [*]
 
 * Tài liệu kỹ thuật: Các chức năng phức tạp và các quyết định kiến trúc quan trọng phải được ghi lại trong tài liệu kỹ thuật.
 
+
+
+ # IV. Công nghệ
+ # V. Yêu cầu thiết kế
+ 
+
 * Khả năng Rollback: Quy trình triển khai phải cho phép dễ dàng quay lại phiên bản ổn định trước đó khi phiên bản mới phát sinh lỗi nghiêm trọng.
