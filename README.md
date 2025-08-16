@@ -1,17 +1,17 @@
 # Hệ thống quản lý đấu giá trang sức trực tuyến
-I. Tổng quan dự án
+# I. Tổng quan dự án
 
-# Mục tiêu
+## Mục tiêu
 
 Mục tiêu của dự án là xây dựng một hệ thống đấu giá trang sức trực tuyến, nhằm kết nối người bán và người mua, đồng thời cung cấp cho công ty các công cụ để quản lý phiên đấu giá, sản phẩm và giao dịch một cách hiệu quả và minh bạch.
 
-# Phạm vi
+## Phạm vi
 
  Phạm vi dự án bao gồm các chức năng chính như: quản lý sản phẩm ký gửi, quản lý phiên đấu giá, quản lý người dùng (người bán, người mua, nhân viên), và quản lý giao dịch.
 
 Việc tham gia đấu giá và đặt giá sẽ được thực hiện trực tuyến qua website, trong khi quy trình thẩm định giá và bàn giao sản phẩm sẽ được nhân viên thực hiện thủ công.
 
-# Giả định và ràng buộc
+## Giả định và ràng buộc
 
 * Hệ thống chỉ phục vụ cho hoạt động đấu giá trang sức của công ty, không phải là một sàn thương mại điện tử đa ngành hàng.
 
@@ -23,7 +23,7 @@ Việc tham gia đấu giá và đặt giá sẽ được thực hiện trực t
 
 # II. Yêu cầu chức năng
 
-#  Các tác nhân 
+##  Các tác nhân 
 * Guest (Khách vãng lai): Người dùng chưa đăng nhập.
 
 * Seller (Người bán): Người dùng có tài khoản, thực hiện ký gửi trang sức để đấu giá.
@@ -85,9 +85,9 @@ Admin --> Manager : quản lý
 
 <img width="579" height="466" alt="image" src="https://github.com/user-attachments/assets/bf19396d-a911-4d20-a629-2cfa38de5c65" />
 
-# Các chức năng chính
+## Các chức năng chính
 
-##  Guest:
+###  Guest:
 
 * Xem sản phẩm/phiên đấu giá: Cho phép xem danh sách các sản phẩm và các phiên đấu giá đang diễn ra hoặc sắp tới.
 
@@ -99,7 +99,7 @@ Admin --> Manager : quản lý
 
 * Đăng nhập: Đăng nhập vào hệ thống bằng tài khoản đã đăng ký.
 
-## Buyer & Seller:
+### Buyer & Seller:
 * Quản lý tài khoản: Cập nhật thông tin cá nhân, thay đổi mật khẩu, quản lý địa chỉ và thông tin thanh toán.
 
 * Tạo yêu cầu ký gửi (Seller): Điền form để gửi yêu cầu đấu giá cho sản phẩm của mình, bao gồm mô tả, hình ảnh và giá mong muốn.
@@ -114,7 +114,7 @@ Admin --> Manager : quản lý
 
 * Thanh toán (Buyer): Thực hiện thanh toán trực tuyến cho sản phẩm đã thắng cuộc.
 
-## Staff:
+### Staff:
 * Quản lý sản phẩm: Tiếp nhận yêu cầu ký gửi, thẩm định chất lượng, cập nhật thông tin chi tiết và hình ảnh cho sản phẩm.
 
 * Quản lý phiên đấu giá:
@@ -127,7 +127,7 @@ Admin --> Manager : quản lý
 
 * Hỗ trợ người dùng: Xem và phản hồi các yêu cầu hỗ trợ từ người dùng.
 
-## Manager:
+### Manager:
 * Phê duyệt giá: Xem xét và phê duyệt mức giá khởi điểm cuối cùng do nhân viên đề xuất cho các sản phẩm quan trọng.
 
 * Quản lý nhân viên: Xem danh sách nhân viên và hiệu suất làm việc.
@@ -136,7 +136,7 @@ Admin --> Manager : quản lý
 
 * Quản lý phí và hoa hồng: Cấu hình các mức phí giao dịch áp dụng cho người mua và người bán.
 
-## Admin:
+### Admin:
 
 * Quản lý tài khoản: Có toàn quyền xem, tạo, sửa, xóa, khóa/mở khóa tài khoản của tất cả người dùng trong hệ thống.
 
@@ -644,3 +644,374 @@ endif
 <img width="1118" height="857" alt="image" src="https://github.com/user-attachments/assets/c8564872-bd98-4a34-b680-4445b45c81c3" />
 
 
+# Luồng xử lý
+## Luồng xử lý đăng lý
+
+<details>
+<summary> Code PlantUML</summary>
+
+```plantum
+@startuml "Biểu đồ trình tự đăng ký"
+!theme plain
+autonumber "<b>[0]"
+
+actor "Khách" as guest
+participant "Giao diện" as ui
+participant "Hệ thống" as system
+database "CSDL" as db
+
+guest -> ui: Truy cập form đăng ký
+activate ui
+
+guest -> ui: Điền thông tin\n(họ tên, email, SĐT, mật khẩu)
+ui -> system: Gửi thông tin đăng ký
+
+activate system
+system -> system: Kiểm tra tính hợp lệ của thông tin
+alt Thông tin hợp lệ
+    system -> db: Lưu thông tin tài khoản 
+    activate db
+    db --> system: Xác nhận lưu thành công
+    deactivate db
+
+    system -> system: Tạo mã xác thực email
+    system -> guest: Gửi email chứa link xác thực
+    system --> ui: Thông báo đăng ký thành công
+    ui --> guest: Chuyển đến trang hướng dẫn xác thực
+else Thông tin không hợp lệ
+    system --> ui: Trả về lỗi
+    ui --> guest: Hiển thị thông báo lỗi
+end
+deactivate system
+deactivate ui
+@enduml
+```
+</details>
+<img width="952" height="621" alt="image" src="https://github.com/user-attachments/assets/6b1acbb2-d256-435c-85db-2ebae9c6f74f" />
+
+## Luồng xử lý Đăng nhập
+
+<details>
+<summary> Code PlantUML</summary>
+
+```plantum
+@startuml "Biểu đồ trình tự đăng nhập"
+!theme plain
+autonumber "<b>[0]"
+
+actor "Người dùng" as user
+participant "Giao diện" as ui
+participant "Hệ thống" as system
+database "CSDL" as db
+
+user -> ui: Điền email, mật khẩu & nhấn Đăng nhập
+activate ui
+ui -> system: Gửi thông tin đăng nhập
+
+activate system
+system -> db: Tìm người dùng theo email
+activate db
+db --> system: Trả về thông tin tài khoản
+deactivate db
+
+system -> system: So sánh mật khẩu
+alt Mật khẩu chính xác
+    system -> system: Kiểm tra trạng thái tài khoản
+    
+    alt Tài khoản đã xác thực
+        system -> system: Tạo JWT Token
+        system --> ui: Trả về Token & thông tin người dùng
+        ui --> user: Đăng nhập thành công & chuyển trang
+    else Tài khoản chưa xác thực
+        system --> ui: Trả về lỗi "Tài khoản chưa xác thực"
+        ui --> user: Hiển thị thông báo yêu cầu xác thực email
+    end
+else Mật khẩu không chính xác
+    system --> ui: Trả về lỗi "Sai thông tin đăng nhập"
+    ui --> user: Hiển thị thông báo lỗi
+end
+deactivate system
+deactivate ui
+@enduml
+```
+</details>
+
+## Luồng xử lý Đặt giá
+
+<details>
+<summary> Code PlantUML</summary>
+
+```plantum
+@startuml "Biểu đồ trình tự Đặt giá"
+!theme plain
+autonumber "<b>[0]"
+
+actor "Người mua" as buyer
+participant "Giao diện" as ui
+participant "Hệ thống" as system
+database "CSDL" as db
+
+buyer -> ui: Nhập mức giá & nhấn "Đặt giá"
+activate ui
+ui -> system: Gửi yêu cầu đặt giá 
+
+activate system
+system -> db: Lấy giá cao nhất hiện tại & bước giá
+activate db
+db --> system: Trả về thông tin giá
+deactivate db
+
+system -> system: Kiểm tra tính hợp lệ của mức giá
+alt Mức giá hợp lệ
+    system -> db: Lưu thông tin lượt đặt giá mới
+    activate db
+    db --> system: Xác nhận lưu thành công
+    deactivate db
+    system --> ui: Cập nhật real-time cho mọi người trong phiên
+else Mức giá không hợp lệ
+    system --> ui: Trả về lỗi 
+end
+
+ui --> buyer: Cập nhật giao diện
+deactivate system
+deactivate ui
+@enduml
+```
+</details>
+
+<img width="993" height="533" alt="image" src="https://github.com/user-attachments/assets/893b04cf-630f-481f-b3b4-94b0c1c607c8" />
+
+## Luồng xử lý Tạo Yêu cầu ký gửi
+<details>
+<summary> Code PlantUML</summary>
+
+```plantum
+@startuml "Biểu đồ trình tự Ký gửi Sản phẩm"
+!theme plain
+autonumber "<b>[0]"
+
+actor "Người bán" as seller
+participant "Giao diện" as ui
+participant "Hệ thống" as system
+database "CSDL" as db
+
+seller -> ui: 1. Truy cập form Ký gửi
+activate ui
+
+seller -> ui: 2. Điền thông tin sản phẩm\n
+seller -> ui: 3. Nhấn "Gửi yêu cầu"
+ui -> system: 4. Gửi thông tin sản phẩm
+
+activate system
+system -> system: 5. Kiểm tra tính hợp lệ của dữ liệu
+alt Dữ liệu hợp lệ
+    system -> db: 6. Lưu thông tin sản phẩm\n
+    activate db
+    db --> system: 7. Xác nhận lưu thành công
+    deactivate db
+
+    system --> ui: 8a. Trả về thông báo thành công
+    ui --> seller: 9a. Hiển thị "Gửi yêu cầu thành công"\nvà chuyển trang
+else Dữ liệu không hợp lệ
+    system --> ui: 8b. Trả về lỗi
+    ui --> seller: 9b. Hiển thị thông báo lỗi chi tiết
+end
+deactivate system
+deactivate ui
+
+@enduml
+```
+</details>
+
+<img width="981" height="607" alt="image" src="https://github.com/user-attachments/assets/4171e246-c696-4732-8dca-edad8f0d1632" />
+
+# Luồng dữ liệu
+
+<details>
+<summary> Code PlantUML</summary>
+
+```plantum
+@startuml "DFD Cấp 1 - Hệ thống Đấu giá Trang sức"
+
+!define PROCESS circle
+!define EXTERNAL_ENTITY rectangle
+!define DATA_STORE database
+
+' --- Tác nhân ngoài (External entities) ---
+EXTERNAL_ENTITY "Khách hàng (Mua/Bán)" as customer
+EXTERNAL_ENTITY "Nhân viên Hệ thống" as staff
+
+' --- Các tiến trình chính (Main processes) ---
+PROCESS "1.0\nQuản lý\nTài khoản" as p1_acc_mgmt
+PROCESS "2.0\nQuản lý\nSản phẩm" as p2_prod_mgmt
+PROCESS "3.0\nQuản lý\nPhiên đấu giá" as p3_sess_mgmt
+PROCESS "4.0\nXử lý Đặt giá\n& Giao dịch" as p4_trans_mgmt
+PROCESS "5.0\nQuản lý\nBáo cáo" as p5_report_mgmt
+
+' --- Kho dữ liệu (Data stores) ---
+DATA_STORE "D1: Dữ liệu Người dùng" as d1_users
+DATA_STORE "D2: Dữ liệu Sản phẩm" as d2_products
+DATA_STORE "D3: Dữ liệu Phiên & Đặt giá" as d3_auctions
+DATA_STORE "D4: Dữ liệu Giao dịch" as d4_transactions
+
+' --- Luồng dữ liệu của Khách hàng ---
+customer --> p1_acc_mgmt : Thông tin Đăng ký/Cập nhật
+customer --> p2_prod_mgmt : Yêu cầu Ký gửi
+p2_prod_mgmt --> customer : Thông báo Trạng thái
+p3_sess_mgmt --> customer : Thông tin Phiên đấu giá
+customer --> p4_trans_mgmt : Thông tin Đặt giá/Thanh toán
+p4_trans_mgmt --> customer : Thông báo Thắng cuộc
+
+' --- Luồng dữ liệu của Nhân viên Hệ thống ---
+staff --> p2_prod_mgmt : Thông tin Thẩm định
+staff --> p3_sess_mgmt : Yêu cầu Vận hành phiên
+staff --> p5_report_mgmt : Yêu cầu xem Báo cáo
+p5_report_mgmt --> staff : Dữ liệu Báo cáo
+
+' --- Luộng dữ liệu kết nối Kho dữ liệu ---
+p1_acc_mgmt <--> d1_users : Đọc/Ghi dữ liệu người dùng
+p2_prod_mgmt <--> d2_products : Đọc/Ghi dữ liệu sản phẩm
+p3_sess_mgmt <--> d3_auctions : Đọc/Ghi dữ liệu phiên
+p3_sess_mgmt --> d2_products : Đọc dữ liệu sản phẩm
+p4_trans_mgmt <--> d3_auctions : Đọc/Ghi dữ liệu đặt giá
+p4_trans_mgmt <--> d4_transactions : Đọc/Ghi dữ liệu giao dịch
+p5_report_mgmt --> d4_transactions : Đọc dữ liệu giao dịch
+
+@enduml
+```
+</details>
+
+<img width="1268" height="664" alt="image" src="https://github.com/user-attachments/assets/19bd0e65-f107-4fe4-be5c-b5082c75242e" />
+
+# Các trạng thái thực thể trong hệ thống
+## Trạng thái Sản phẩm
+
+
+<details>
+<summary> Code PlantUML</summary>
+
+```plantum
+@startuml "Biểu đồ trạng thái Sản phẩm"
+!theme plain
+
+[*] --> PendingApproval : Người bán gửi ký gửi
+PendingApproval --> Approved : Giám đốc phê duyệt
+PendingApproval --> Rejected : Giám đốc từ chối
+PendingApproval --> Cancelled : Người bán hủy
+Approved --> OnAuction : Nhân viên thêm vào phiên
+Approved --> Cancelled : Người bán hủy
+OnAuction --> Sold_PendingPayment : Có người thắng cuộc
+OnAuction --> Unsold : Hết phiên không có người mua
+Sold_PendingPayment --> Sold_PendingDelivery : Người mua thanh toán
+Sold_PendingPayment --> Unsold : Hết hạn thanh toán
+Sold_PendingDelivery --> Completed : Nhân viên xác nhận bàn giao
+Unsold --> Approved: Lên lịch đấu giá lại
+
+state PendingApproval as "Chờ duyệt"
+state Approved as "Sẵn sàng đấu giá"
+state OnAuction as "Đang đấu giá"
+state Sold_PendingPayment as "Chờ thanh toán"
+state Sold_PendingDelivery as "Chờ bàn giao"
+state Completed as "Đã hoàn tất"
+state Unsold as "Không bán được"
+state Rejected as "Bị từ chối"
+state Cancelled as "Đã hủy"
+
+note right of PendingApproval : Chờ Nhân viên & Giám đốc\nxem xét, thẩm định
+note right of Approved : Sản phẩm đã hợp lệ,\nchờ được thêm vào phiên
+
+Rejected --> [*]
+Cancelled --> [*]
+Completed --> [*]
+@enduml
+```
+</details>
+
+<img width="693" height="764" alt="image" src="https://github.com/user-attachments/assets/818adde7-2e8b-4387-bc7b-d97b6e970a62" />
+
+## Trạng thái Giao dịch  
+<details>
+<summary> Code PlantUML</summary>
+
+```plantum
+@startuml "Biểu đồ trạng thái Giao dịch"
+!theme plain
+
+[*] --> PendingPayment : Người mua thắng đấu giá
+PendingPayment --> Paid : Người mua thanh toán thành công
+PendingPayment --> Failed : Hết hạn thanh toán
+PendingPayment --> Cancelled : Quản lý hủy giao dịch
+Paid --> Completed : Nhân viên xác nhận bàn giao
+
+state PendingPayment as "Chờ thanh toán"
+state Paid as "Đã thanh toán"
+state Completed as "Đã hoàn tất"
+state Failed as "Thất bại"
+state Cancelled as "Đã hủy"
+
+note right of PendingPayment: Giao dịch được tạo,\nchờ người mua thanh toán.
+note right of Paid: Người mua đã trả tiền,\nchờ bàn giao sản phẩm.
+
+Completed --> [*]
+Failed --> [*]
+Cancelled --> [*]
+@enduml
+```
+</details>
+
+<img width="617" height="449" alt="image" src="https://github.com/user-attachments/assets/ba4764eb-7232-4c56-91d8-21a3fe1b5ace" />
+
+
+# III. Yêu cầu phi chức năng
+## Hiệu suất
+* Tải trang: Thời gian tải các trang chính không quá 3 giây.
+
+* API phản hồi: Thời gian phản hồi cho các API quan trọngkhông quá 1 giây.
+
+* Chịu tải đồng thời: Hệ thống phải hỗ trợ ổn định ở mức tối thiểu 50 người dùng đặt giá trong một phiên bản đấu giá.
+
+* Tài nguyên tối ưu: Hình ảnh sản phẩm và tài nguyên tĩnh phải được nén và tối ưu hóa để giảm thời gian tải.
+
+## Bảo mật
+* Mã hóa dữ liệu: Mật khẩu người dùng và các thông tin nhạy cảm phải được mã hóa mạnh trong cơ sở dữ liệu.
+
+* Chống tấn công: Hệ thống phải có cơ chế phòng chống các loại tấn công web phổ biến, đặc biệt là SQL Injection và Cross-Site Scripting.
+
+* Logging: Ghi lại (log) đầy đủ các hoạt động quan trọng như đăng nhập, thay đổi thông tin, đặt giá, và giao dịch.
+
+* Sao lưu định kỳ: Dữ liệu hệ thống phải được sao lưu tự động theo định kỳ.
+
+## KHả năng mở rộng
+* Kiến trúc Module: Hệ thống được xây dựng theo kiến trúc module để dễ dàng bảo trì và thêm tính năng mới.
+
+* Tích hợp bên thứ ba: Kiến trúc phải sẵn sàng cho việc tích hợp với các hệ thống bên thứ ba như cổng thanh toán, dịch vụ vận chuyển.
+
+* Tài liệu hóa: Cung cấp tài liệu API đầy đủ cho các nhà phát triển.
+
+## Giao diện người dùng
+* Thiết kế đáp ứng (Responsive): Giao diện phải tương thích và hiển thị tốt trên mọi kích thước màn hình, từ máy tính để bàn đến điện thoại di động.
+
+* Dễ sử dụng: Người dùng mới có thể học và sử dụng các chức năng chính (tìm kiếm, đặt giá) trong vòng dưới 30 phút.
+
+* Tính nhất quán: Giao diện và luồng hoạt động phải nhất quán trên toàn bộ hệ thống.
+
+## Tương thích
+ * Trình duyệt: Hoạt động tốt trên các trình duyệt phổ biến: Chrome, Firefox, Safari, Edge.
+
+ * Thiết bị di động: Tương thích với các thiết bị di động chạy hệ điều hành iOS và Android.
+
+ * Tối ưu kết nối: Giao diện và chức năng được tối ưu để hoạt động mượt mà ngay cả trên kết nối mạng chậm.
+
+## ĐỘ tin cậy
+* Uptime: Thời gian hoạt động của hệ thống phải đạt tối thiểu 99.9%.
+
+* Phục hồi sau sự cố: Thời gian để phục hồi hệ thống sau khi xảy ra sự cố không quá 4 giờ.
+
+* Kế hoạch dự phòng: Có phương án dự phòng cho cơ sở dữ liệu và máy chủ để đảm bảo an toàn dữ liệu.
+
+## Khả năng bảo trì
+* Clean Code: Mã nguồn được viết theo các tiêu chuẩn clean code, dễ đọc và dễ hiểu.
+
+* Tài liệu kỹ thuật: Các chức năng phức tạp và các quyết định kiến trúc quan trọng phải được ghi lại trong tài liệu kỹ thuật.
+
+* Khả năng Rollback: Quy trình triển khai phải cho phép dễ dàng quay lại phiên bản ổn định trước đó khi phiên bản mới phát sinh lỗi nghiêm trọng.
