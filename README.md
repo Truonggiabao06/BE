@@ -735,6 +735,9 @@ deactivate ui
 ```
 </details>
 
+<img width="834" height="577" alt="image" src="https://github.com/user-attachments/assets/6a89845f-4555-4cc9-9414-508e57ab5c08" />
+
+
 ## Luồng xử lý Đặt giá
 
 <details>
