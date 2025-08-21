@@ -46,3 +46,4 @@
 
 ## ORM Đã được triển khai trong Flask python 
 Ánh xạ các class python --> Table CSDL 
+<!-- update test -->
