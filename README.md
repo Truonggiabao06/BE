@@ -1019,7 +1019,167 @@ Cancelled --> [*]
 
 
  # IV. Công nghệ
+
+ * Giao diện người dùng: ReactJS JavaScript
+
+* API: Use normal TodoApi để giao tiếp giữa frontend và backend.
+
+* Cơ sở dữ liệu: Use SQL Server to archive data. Bảo mật
+
+* Sử dụng: (JSON Web Tokens) để xác thực và phân quyền người dùng.
+
+* Thông báo: Sử dụng Email dịch vụ để gửi các thông báo quan trọng cho người dùng
+
+* Triền khai: Sử dụng Docker để đóng gói và phát triển ứng dụng một cách nhất quán.
+
+* Quản lý nguồn mã hóa: Sử dụng Git để quản lý nguồn mã hóa và GitHub để lưu trữ nguồn.
+
+
  # V. Yêu cầu thiết kế
  
+ ## Mô hình kiến ​​trúc
+Cấu trúc mô hình của hệ thống sẽ bao gồm các thành phần chính sau:
 
-* Khả năng Rollback: Quy trình triển khai phải cho phép dễ dàng quay lại phiên bản ổn định trước đó khi phiên bản mới phát sinh lỗi nghiêm trọng.
+* Client: Người dùng giao diện, xây dựng bằng ReactJS , kết nối với API để lấy và gửi dữ liệu.
+
+* Server: Dịch vụ API, xây dựng bằng Flask (Python) , sử dụng kiến ​​trúc Sạch (Clean Architecture) để xử lý logic, bao gồm các lớp:
+
+* Lớp API: Xử lý các yêu cầu từ máy khách, gọi các phương thức từ lớp Dịch vụ.
+
+* Lớp dịch vụ: Chứa bộ xử lý logic chính của ứng dụng, gọi các phương thức từ lớp Repository.
+
+* Lớp cơ sở hạ tầng: Tương tác với cơ sở dữ liệu, thực hiện các thao tác CRUD.
+
+* Cơ sở dữ liệu: Cơ sở dữ liệu MS SQL Server , lưu trữ toàn bộ thông tin của hệ thống.
+
+## Cơ sở dữ liệu mô hình
+Cơ sở dữ liệu mô hình sẽ bao gồm các bảng chính sau:
+
+* Users: Lưu thông tin người dùng (họ tên, email, mật khẩu, vai trò...).
+
+* Vai trò: Lưu các vai trò để phân quyền (Quản trị viên, Người bán, Người mua...).
+
+* Sản phẩm: Lưu thông tin chi tiết các sản phẩm trang sức được ký gửi.
+
+* AuctionSessions: Lưu thông tin các phiên đấu giá (thời gian bắt đầu, kết thúc ngọn đuốc).
+
+* Giá thầu: Ghi lại lịch sử đặt giá của người dùng cho sản phẩm.
+
+* Giao dịch: Lưu thông tin giao dịch thành công sau khi kết thúc giá.
+
+* Thông báo: Lưu các thông báo được gửi đến người dùng.
+
+* Phản hồi: Lưu các phản hồi, đánh giá giá trị của người dùng về giao dịch.
+
+
+<details>
+<summary> Code PlantUML</summary>
+
+```plantum
+@startuml "Mô hình cơ sở dữ liệu"
+
+entity User {
+  * id: string <<PK>>
+  --
+  * firstName: string(50)
+  * lastName: string(50)
+  * email: string(256)
+  * phoneNumber: string(20)
+  bio: string(128)
+  imageUrl: string(256)
+  specialties: string[]
+}
+
+entity Role {
+  * id: string <<PK>>
+  --
+  * name: string(256)
+}
+
+entity UserRole {
+  * userId: string <<FK>>
+  * roleId: string <<FK>>
+}
+
+entity Service {
+  * id: guid <<PK>>
+  --
+  * name: string(50)
+  * description: string(256)
+  * price: decimal(10,2)
+  * durationMinutes: int
+  imageUrl: string(256)
+  isDeleted: bool
+}
+
+entity ServiceStylist {
+  * serviceId: guid <<FK>>
+  * stylistId: string <<FK>>
+}
+
+entity Appointment {
+  * id: guid <<PK>>
+  --
+  * customerId: string <<FK>>
+  * stylistId: string <<FK>>
+  * serviceId: guid <<FK>>
+  * dateTime: datetime
+  * status: string(16)
+  * totalPrice: decimal(10,2)
+  customerNotes: string(128)
+  stylistNotes: string(128)
+}
+
+entity Salon {
+  * id: guid <<PK>>
+  --
+  * name: string(50)  
+  * description: string(256)
+  * address: string(256)
+  * phoneNumber: string(20)
+  * email: string(128)
+  * openingTime: time
+  * closingTime: time
+  * leadWeeks: int
+}
+
+' ===== Quan hệ =====
+User "1" -- "*" UserRole
+Role "1" -- "*" UserRole
+
+User "1" -- "*" ServiceStylist
+Service "1" -- "*" ServiceStylist
+
+User "1" -- "*" Appointment : customer
+User "1" -- "*" Appointment : stylist
+Service "1" -- "*" Appointment
+
+Salon "1" -- "*" Service
+
+@enduml
+```
+</details>
+<img width="514" height="572" alt="image" src="https://github.com/user-attachments/assets/889755bb-acda-4368-9541-f95b31b15ae9" />
+
+
+
+ 
+
+## Người dùng giao diện
+Người dùng giao diện sẽ bao gồm các trang chính sau:
+
+* Trang chủ: Hiển thị các phiên đấu giá nổi bật, các sản phẩm sắp xếp giá, thông tin giới thiệu.
+
+* Trang Sản phẩm: Hiển thị danh sách tất cả sản phẩm, cho phép tìm kiếm, lọc và xem chi tiết.
+
+* Trang Chi tiết phiên bản chiến đấu: Hiển thị đầy đủ thông tin về một sản phẩm, lịch sử giá, cho phép người dùng đặt giá nếu phiên bản diễn ra.
+
+* Trang Cá nhân (Dashboard):
+
+* Hiển thị thông tin cá nhân, cho phép cập nhật cập nhật, đổi mật khẩu.
+
+* Đối với Người bán: Quản lý danh sách sản phẩm đã gửi và theo dõi trạng thái.
+
+* Đối với Người mua: Quản lý lịch sử giá và các giao dịch đã thắng.
+
+* Trang quản lý (Bảng quản trị): Dành cho nhân viên và quản lý, cho phép duyệt sản phẩm, tạo và vận hành phiên bản đấu giá, xem báo cáo.
