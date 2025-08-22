@@ -1,0 +1,2 @@
+﻿class UserService:
+    pass

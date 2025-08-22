@@ -1,0 +1,13 @@
+﻿from abc import ABC, abstractmethod
+from typing import Optional
+from src.domain.models.payment import Payment
+
+class IPaymentRepository(ABC):
+    @abstractmethod
+    def get(self, payment_id:int) -> Optional[Payment]: ...
+    @abstractmethod
+    def get_by_order(self, order_id:int) -> Optional[Payment]: ...
+    @abstractmethod
+    def create(self, payment:Payment) -> Payment: ...
+    @abstractmethod
+    def update(self, payment:Payment) -> Payment: ...

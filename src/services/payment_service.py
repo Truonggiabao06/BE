@@ -1,0 +1,2 @@
+﻿class PaymentService:
+    pass
