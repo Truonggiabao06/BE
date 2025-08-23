@@ -1,9 +1,5 @@
 # Đồ Án Hệ Thống Đấu Giá Trang Sức
 
-## Thông tin sinh viên
-- **Họ tên**: [Tên sinh viên]
-- **Lớp**: [Lớp]
-- **Môn học**: Lập trình Web / Công nghệ phần mềm
 
 ## Mô tả đồ án
 Em làm hệ thống đấu giá trang sức theo yêu cầu của thầy. Hệ thống có đầy đủ chức năng từ đăng ký, đăng nhập đến đấu giá và thanh toán.
