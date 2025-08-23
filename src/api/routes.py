@@ -8,6 +8,9 @@ def register_routes(app: Flask):
     from .controllers.auction_session_controller import auction_session_bp
     from .controllers.bid_controller import bid_bp
     from .controllers.payment_controller import payment_bp
+    from .controllers.staff_controller import staff_bp
+    from .controllers.manager_controller import manager_bp
+    from .controllers.dashboard_controller import dashboard_bp
 
     # Đăng ký
     app.register_blueprint(auth_bp)
@@ -16,3 +19,6 @@ def register_routes(app: Flask):
     app.register_blueprint(auction_session_bp)
     app.register_blueprint(bid_bp)
     app.register_blueprint(payment_bp)
+    app.register_blueprint(staff_bp)
+    app.register_blueprint(manager_bp)
+    app.register_blueprint(dashboard_bp)

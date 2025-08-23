@@ -1,1 +1,0 @@
-﻿docker compose logs -f --tail 200
