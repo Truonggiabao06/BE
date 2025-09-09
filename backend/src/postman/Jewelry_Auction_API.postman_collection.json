@@ -1,0 +1,364 @@
+{
+	"info": {
+		"_postman_id": "jewelry-auction-api-collection",
+		"name": "Jewelry Auction API",
+		"description": "Complete API collection for the Jewelry Auction System with authentication, jewelry management, auctions, bidding, and sell requests.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{access_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://127.0.0.1:5000",
+			"type": "string"
+		},
+		{
+			"key": "access_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "user_id",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Login (Working Endpoint)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    if (response.success && response.data.access_token) {",
+									"        pm.collectionVariables.set('access_token', response.data.access_token);",
+									"        pm.collectionVariables.set('user_id', response.data.user.id);",
+									"        console.log('✅ Login successful, token saved');",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin@example.com\",\n    \"password\": \"Admin@123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/auth",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "auth", "auth"]
+						},
+						"description": "Login with admin credentials. This endpoint works correctly."
+					}
+				},
+				{
+					"name": "Login (Standard Endpoint)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    if (response.success && response.data.access_token) {",
+									"        pm.collectionVariables.set('access_token', response.data.access_token);",
+									"        pm.collectionVariables.set('user_id', response.data.user.id);",
+									"        console.log('✅ Login successful, token saved');",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin@example.com\",\n    \"password\": \"Admin@123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/login",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "auth", "login"]
+						},
+						"description": "Standard login endpoint. Both /auth and /login work now."
+					}
+				},
+				{
+					"name": "Register New User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Test User\",\n    \"email\": \"test@example.com\",\n    \"password\": \"TestPass123!\",\n    \"role\": \"MEMBER\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/register",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "auth", "register"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Jewelry Management",
+			"item": [
+				{
+					"name": "Get All Jewelry",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/jewelry?page=1&page_size=20",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "jewelry"],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "page_size",
+									"value": "20"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Create Jewelry Item",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Diamond Ring\",\n    \"description\": \"Beautiful 2-carat diamond ring\",\n    \"category\": \"RING\",\n    \"material\": \"GOLD\",\n    \"weight\": 15.5,\n    \"dimensions\": \"Size 7\",\n    \"condition\": \"EXCELLENT\",\n    \"estimated_value\": 5000.00\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/jewelry",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "jewelry"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Sell Requests",
+			"item": [
+				{
+					"name": "Get All Sell Requests",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/sell-requests",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "sell-requests"]
+						}
+					}
+				},
+				{
+					"name": "Create Sell Request",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"jewelry_item_id\": \"c90e35ba-7de1-49e3-b51d-c403aac92f79\",\n    \"notes\": \"Want to sell my grandmother's ring\",\n    \"seller_notes\": \"Inherited item, excellent condition\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/sell-requests",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "sell-requests"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Auctions",
+			"item": [
+				{
+					"name": "Get All Auctions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/auctions",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "auctions"]
+						}
+					}
+				},
+				{
+					"name": "Create Auction Session",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Weekly Jewelry Auction\",\n    \"description\": \"Premium jewelry collection\",\n    \"start_time\": \"2024-12-30T14:00:00Z\",\n    \"end_time\": \"2024-12-30T18:00:00Z\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/auctions",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "auctions"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Bidding",
+			"item": [
+				{
+					"name": "Get Session Bids",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/bids/sessions/1",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "bids", "sessions", "1"]
+						}
+					}
+				},
+				{
+					"name": "Place Bid",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"session_item_id\": \"item-id-here\",\n    \"amount\": 1500.00\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/bids",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "bids"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "File Upload",
+			"item": [
+				{
+					"name": "Upload Image",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": []
+								},
+								{
+									"key": "description",
+									"value": "Jewelry photo",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/upload/images",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "upload", "images"]
+						}
+					}
+				},
+				{
+					"name": "Upload Document",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": []
+								},
+								{
+									"key": "document_type",
+									"value": "certificate",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/upload/documents",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "upload", "documents"]
+						}
+					}
+				}
+			]
+		}
+	]
+}
